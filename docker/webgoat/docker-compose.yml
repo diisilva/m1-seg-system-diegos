@@ -1,0 +1,24 @@
+services:
+  webgoat:
+    image: webgoat/webgoat:v2025.3
+    container_name: labnet-wg-webgoat
+    restart: "no"
+    environment:
+      WEBGOAT_HOST: 0.0.0.0
+      WEBWOLF_HOST: 0.0.0.0
+    ports:
+      - "127.0.0.1:${WEBGOAT_HTTP_PORT:-8081}:8080"
+      - "127.0.0.1:${WEBWOLF_HTTP_PORT:-9090}:9090"
+    networks:
+      - labnet-wg
+    healthcheck:
+      test: ["CMD-SHELL", "wget -q -O /dev/null http://127.0.0.1:8080/WebGoat/login || exit 1"]
+      interval: 15s
+      timeout: 5s
+      retries: 10
+      start_period: 45s
+
+networks:
+  labnet-wg:
+    name: labnet-wg
+    driver: bridge

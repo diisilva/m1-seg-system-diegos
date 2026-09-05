@@ -35,27 +35,45 @@ relatorio/             relatório técnico da entrega, em Markdown e PDF
 
 ## Requisitos
 
-_A preencher: versões de Docker, Docker Compose e Python usadas pela equipe._
+- Docker e Docker Compose (plugin `compose`) funcionais.
+- Python 3.11 ou superior, para os scripts em `scripts/`.
+- Opcional para a investigação: navegador com DevTools, OWASP ZAP, Burp Suite Community, sqlmap, Nikto.
 
 ## Arquitetura
 
-_A preencher com o diagrama de rede e a descrição de isolamento entre os dois laboratórios._
+Dois laboratórios independentes, cada um em sua própria rede Docker bridge, sem rota entre si e sem publicação de porta fora de `127.0.0.1`. Detalhes em `docs/isolamento-rede.md`.
 
 ## Preparação
 
-_A preencher com os passos de instalação das ferramentas de apoio (Docker, ambiente virtual Python, ZAP, Burp Community, sqlmap, Nikto)._
+Nenhuma instalação adicional é necessária além do Docker para subir os alvos. Para a investigação com scripts Python, crie um ambiente virtual e instale as dependências:
+
+```
+python -m venv .venv
+.venv\Scripts\activate
+pip install -e .
+```
 
 ## Execução
 
-_A preencher com os comandos gerais de subida e derrubada dos ambientes._
+Cada cenário sobe e desce de forma independente, com seu próprio `docker-compose.yml`.
 
 ### Juice Shop
 
-_A preencher com o comando `docker compose` específico, a porta de acesso e o endereço final._
+```
+docker compose -f docker/juiceshop/docker-compose.yml up -d
+docker compose -f docker/juiceshop/docker-compose.yml down
+```
+
+Acesso: `http://127.0.0.1:3000`. Porta de host configurável em `docker/juiceshop/.env` (veja `.env.example`).
 
 ### WebGoat
 
-_A preencher com o comando `docker compose` específico, as portas de acesso (WebGoat e WebWolf) e o endereço final._
+```
+docker compose -f docker/webgoat/docker-compose.yml up -d
+docker compose -f docker/webgoat/docker-compose.yml down
+```
+
+Acesso: `http://127.0.0.1:8081/WebGoat` (WebGoat) e `http://127.0.0.1:9090/WebWolf` (WebWolf). A porta do WebGoat é 8081, não a 8080 sugerida pelo roteiro do trabalho, por conflito com outro serviço local; veja `docker/webgoat/README.md`. Portas configuráveis em `docker/webgoat/.env` (veja `.env.example`). Na primeira execução, o WebGoat pede a criação de um usuário local, exclusivo deste ambiente.
 
 ## Scripts disponíveis
 
@@ -71,7 +89,9 @@ _A preencher com os comandos de `docker compose down` e remoção de recursos de
 
 ## Troubleshooting
 
-_A preencher com problemas comuns observados durante a execução (ex.: conflito de porta de host, já tratado via `.env.example` de cada cenário)._
+**Porta de host já em uso.** Se `docker compose up` falhar por porta ocupada, verifique o que já está escutando nela (`Get-NetTCPConnection -LocalPort <porta>` no Windows, `ss -ltn` no Linux/macOS) e crie um `.env` no diretório do cenário correspondente (a partir do `.env.example`), definindo uma porta livre. Não é necessário editar o `docker-compose.yml`. Nesta configuração, a porta do WebGoat já foi ajustada de 8080 para 8081 por esse motivo.
+
+**WebGoat demora a ficar saudável.** É uma aplicação Java/Spring; o healthcheck usa `start_period` de 45 segundos e várias tentativas antes de reportar falha. Acompanhe com `docker compose -f docker/webgoat/docker-compose.yml ps`.
 
 ## Limitações
 

@@ -1,0 +1,26 @@
+services:
+  juice-shop:
+    image: bkimminich/juice-shop:v20.2.0
+    container_name: labnet-js-juice-shop
+    restart: "no"
+    ports:
+      - "127.0.0.1:${JUICESHOP_HTTP_PORT:-3000}:3000"
+    networks:
+      - labnet-js
+    healthcheck:
+      test:
+        [
+          "CMD",
+          "/nodejs/bin/node",
+          "-e",
+          "require('http').get('http://127.0.0.1:3000/', r => process.exit(r.statusCode === 200 ? 0 : 1)).on('error', () => process.exit(1))",
+        ]
+      interval: 10s
+      timeout: 5s
+      retries: 6
+      start_period: 20s
+
+networks:
+  labnet-js:
+    name: labnet-js
+    driver: bridge

@@ -23,10 +23,16 @@ A porta de host do WebGoat foi definida em 8081, em vez dos 8080 sugeridos pelo 
 
 ## Endereços de rede documentados
 
-A preencher, durante a validação de isolamento, com a saída real de `docker network inspect` de cada rede (sub-rede, gateway) e a confirmação de que nenhuma porta responde fora de `127.0.0.1`.
+Validado com `docker network inspect`, `docker port` e, no host, `Get-NetTCPConnection` (Windows):
 
-| Cenário | Rede Docker | Sub-rede | Endereço do alvo |
-|---|---|---|---|
-| Juice Shop | `labnet-js` | _a preencher_ | `http://127.0.0.1:3000` |
-| WebGoat | `labnet-wg` | _a preencher_ | `http://127.0.0.1:8081/WebGoat` |
-| WebWolf | `labnet-wg` | _a preencher_ | `http://127.0.0.1:9090` |
+| Cenário | Rede Docker | Sub-rede | Gateway | Endereço do alvo |
+|---|---|---|---|---|
+| Juice Shop | `labnet-js` | `172.24.0.0/16` | `172.24.0.1` | `http://127.0.0.1:3000` |
+| WebGoat | `labnet-wg` | `172.25.0.0/16` | `172.25.0.1` | `http://127.0.0.1:8081/WebGoat` |
+| WebWolf | `labnet-wg` | `172.25.0.0/16` | `172.25.0.1` | `http://127.0.0.1:9090/WebWolf` |
+
+## Evidência de isolamento coletada
+
+- **Bind exclusivo em loopback:** `Get-NetTCPConnection -LocalPort 3000,8081,9090 -State Listen` no host mostra as três portas escutando apenas em `127.0.0.1`, nunca em `0.0.0.0`. `docker port` confirma o mesmo mapeamento (`3000/tcp -> 127.0.0.1:3000`, `8080/tcp -> 127.0.0.1:8081`, `9090/tcp -> 127.0.0.1:9090`).
+- **Sem rota entre as duas redes:** a partir do container `labnet-wg-webgoat` (rede `labnet-wg`), uma tentativa de conexão HTTP ao IP interno do container `labnet-js-juice-shop` (rede `labnet-js`, `172.24.0.2:3000`) não completa: nem sucesso nem recusa de conexão, apenas timeout (testado com um limite de 6 segundos, sem resposta). Esse comportamento é consistente com a ausência de rota entre as duas redes bridge, que não compartilham rede nem estão conectadas uma à outra. O teste no sentido inverso (Juice Shop tentando alcançar o WebGoat) não foi possível de forma automatizada porque a imagem do Juice Shop não possui shell (imagem distroless, apenas o binário do Node); a garantia de isolamento nesse sentido decorre da mesma configuração de rede, simétrica por padrão no Docker.
+- **Recriação determinística:** os dois ambientes foram derrubados (`docker compose down`) e recriados (`docker compose up -d`) a partir do zero, retornando ao mesmo estado saudável (`healthy`) e às mesmas portas, sem qualquer configuração manual adicional.
