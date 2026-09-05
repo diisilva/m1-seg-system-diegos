@@ -1,0 +1,16 @@
+# Ambiente Python
+.venv/
+__pycache__/
+*.pyc
+*.egg-info/
+.pytest_cache/
+
+# Configuração local por cenário (mantenha apenas os .env.example versionados)
+docker/juiceshop/.env
+docker/webgoat/.env
+
+# Editores e sistema operacional
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
