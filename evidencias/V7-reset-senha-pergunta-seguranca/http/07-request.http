@@ -1,0 +1,9 @@
+POST http://127.0.0.1:3000/rest/user/reset-password
+User-Agent: python-requests/2.34.2
+Accept-Encoding: gzip, deflate
+Accept: */*
+Connection: keep-alive
+Content-Length: 114
+Content-Type: application/json
+
+{"email": "resetpwd-71e32870fe@lab.local", "answer": "James", "new": "SenhaForjada#2", "repeat": "SenhaForjada#2"}

@@ -1,0 +1,18 @@
+HTTP 401 Unauthorized
+Access-Control-Allow-Origin: *
+X-Content-Type-Options: nosniff
+X-Frame-Options: SAMEORIGIN
+Feature-Policy: payment 'self'
+X-Recruiting: /#/jobs
+X-RateLimit-Limit: 100
+X-RateLimit-Remaining: 98
+Date: Sat, 05 Sep 2026 19:52:06 GMT
+X-RateLimit-Reset: 1788638227
+Content-Type: text/html; charset=utf-8
+Content-Length: 34
+ETag: W/"22-pKf21LHLRtt7tz87UOfXryoVL/s"
+Vary: Accept-Encoding
+Connection: keep-alive
+Keep-Alive: timeout=5
+
+Wrong answer to security question.

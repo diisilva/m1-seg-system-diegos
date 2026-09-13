@@ -1,0 +1,9 @@
+POST http://127.0.0.1:3000/rest/user/login
+User-Agent: python-requests/2.34.2
+Accept-Encoding: gzip, deflate
+Accept: */*
+Connection: keep-alive
+Content-Length: 72
+Content-Type: application/json
+
+{"email": "bruteforce-837d92427c@lab.local", "password": "senhaErrada3"}

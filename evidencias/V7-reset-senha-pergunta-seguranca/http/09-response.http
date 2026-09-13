@@ -1,0 +1,18 @@
+HTTP 200 OK
+Access-Control-Allow-Origin: *
+X-Content-Type-Options: nosniff
+X-Frame-Options: SAMEORIGIN
+Feature-Policy: payment 'self'
+X-Recruiting: /#/jobs
+X-RateLimit-Limit: 100
+X-RateLimit-Remaining: 95
+Date: Sat, 05 Sep 2026 19:52:06 GMT
+X-RateLimit-Reset: 1788638227
+Content-Type: application/json; charset=utf-8
+Content-Length: 363
+ETag: W/"16b-8o5LHOMZWXPAHZpjeYcDYJ2Xy/c"
+Vary: Accept-Encoding
+Connection: keep-alive
+Keep-Alive: timeout=5
+
+{"user":{"id":45,"username":"","email":"resetpwd-71e32870fe@lab.local","password":"c251dd697b61b59610d0f2c30376ff4f","role":"customer","deluxeToken":"","lastLoginIp":"0.0.0.0","profileImage":"/assets/public/images/uploads/default.svg","totpSecret":"","isActive":true,"createdAt":"2026-09-05T19:52:05.981Z","updatedAt":"2026-09-05T19:52:06.322Z","deletedAt":null}}

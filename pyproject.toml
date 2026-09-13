@@ -1,11 +1,11 @@
 [project]
-name = "m1-seg-system-diegos"
+name = "vulnerable-web-application"
 version = "0.1.0"
-description = "Avaliação de vulnerabilidades em OWASP Juice Shop e OWASP WebGoat, com classificação OWASP Top 10, CWE e CVSS."
+description = "Trabalho 1: avaliação de vulnerabilidades no OWASP Juice Shop, com classificação OWASP Top 10, CWE e CVSS."
 requires-python = ">=3.11"
 dependencies = [
     "requests>=2.31",
 ]
 
 [tool.setuptools.packages.find]
-where = ["scripts"]
+include = ["scripts*"]

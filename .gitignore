@@ -1,16 +1,18 @@
-# Ambiente Python
-.venv/
-__pycache__/
-*.pyc
-*.egg-info/
-.pytest_cache/
-
-# Configuração local por cenário (mantenha apenas os .env.example versionados)
-docker/juiceshop/.env
-docker/webgoat/.env
-
-# Editores e sistema operacional
-.vscode/
-.idea/
+# Temporarios do ZAP
+*.session
+*.session.*
 .DS_Store
 Thumbs.db
+
+# configuracao local (porta customizada); mantenha .env.example versionado
+.env
+
+# python
+__pycache__/
+*.pyc
+.venv/
+venv/
+*.egg-info/
+
+# cola do apresentador, uso local apenas, nao versionar
+apresentacao/cola.html

@@ -1,0 +1,9 @@
+POST http://127.0.0.1:3000/api/Users
+User-Agent: python-requests/2.34.2
+Accept-Encoding: gzip, deflate
+Accept: */*
+Connection: keep-alive
+Content-Length: 110
+Content-Type: application/json
+
+{"email": "resetpwd-71e32870fe@lab.local", "password": "SenhaOriginal#1", "passwordRepeat": "SenhaOriginal#1"}

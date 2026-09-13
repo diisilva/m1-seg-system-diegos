@@ -1,0 +1,9 @@
+POST http://127.0.0.1:3000/api/Users
+User-Agent: python-requests/2.34.2
+Accept-Encoding: gzip, deflate
+Accept: */*
+Connection: keep-alive
+Content-Length: 170
+Content-Type: application/json
+
+{"email": "idor-e7de49555a@lab.local", "password": "OutraSenha#2", "passwordRepeat": "OutraSenha#2", "securityQuestion": {"id": 1}, "securityAnswer": "resposta-de-teste"}

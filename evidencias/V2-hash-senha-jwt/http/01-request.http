@@ -1,0 +1,9 @@
+POST http://127.0.0.1:3000/api/Users
+User-Agent: python-requests/2.34.2
+Accept-Encoding: gzip, deflate
+Accept: */*
+Connection: keep-alive
+Content-Length: 180
+Content-Type: application/json
+
+{"email": "crypto-3261bba9d2@lab.local", "password": "SenhaDeAnalise#3", "passwordRepeat": "SenhaDeAnalise#3", "securityQuestion": {"id": 1}, "securityAnswer": "resposta-de-teste"}

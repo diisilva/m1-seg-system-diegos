@@ -1,0 +1,15 @@
+HTTP 200 OK
+Access-Control-Allow-Origin: *
+X-Content-Type-Options: nosniff
+X-Frame-Options: SAMEORIGIN
+Feature-Policy: payment 'self'
+X-Recruiting: /#/jobs
+Content-Type: application/json; charset=utf-8
+Content-Length: 824
+ETag: W/"338-7h+1sKoBfoa1jvA5I7O1vQDgG5Y"
+Vary: Accept-Encoding
+Date: Sat, 05 Sep 2026 19:52:06 GMT
+Connection: keep-alive
+Keep-Alive: timeout=5
+
+{"authentication":{"token":"eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiJ9.eyJkYXRhIjp7ImlkIjo0NSwidXNlcm5hbWUiOiIiLCJlbWFpbCI6InJlc2V0cHdkLTcxZTMyODcwZmVAbGFiLmxvY2FsIiwicGFzc3dvcmQiOiJjMjUxZGQ2OTdiNjFiNTk2MTBkMGYyYzMwMzc2ZmY0ZiIsInJvbGUiOiJjdXN0b21lciIsImRlbHV4ZVRva2VuIjoiIiwibGFzdExvZ2luSXAiOiIwLjAuMC4wIiwicHJvZmlsZUltYWdlIjoiL2Fzc2V0cy9wdWJsaWMvaW1hZ2VzL3VwbG9hZHMvZGVmYXVsdC5zdmciLCJ0b3RwU2VjcmV0IjoiIiwiaXNBY3RpdmUiOnRydWUsImNyZWF0ZWRBdCI6IjIwMjYtMDktMDUgMTk6NTI6MDUuOTgxICswMDowMCIsInVwZGF0ZWRBdCI6IjIwMjYtMDktMDUgMTk6NTI6MDYuMzIyICswMDowMCIsImRlbGV0ZWRBdCI6bnVsbH0sImJpZCI6MjUsImlhdCI6MTc4ODYzNzkyNn0.A-jyjb_ou_P-ipXAxMhXlViocrVIpJan6mFM5orr9UfVMd-cHoigfm907wMdykT3fTP-wrYJE-GFhykUVO55HZLE1Q6CE-S9mtzbGPCPFuDPHwUqHMqiO7kOOchkJsppmEg24rxZ1SP5YIk3S5fAE2rV4E18yiuH-CbbKZ1k3Fg","bid":25,"umail":"resetpwd-71e32870fe@lab.local"}}

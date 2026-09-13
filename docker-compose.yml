@@ -1,0 +1,64 @@
+# Ambiente do alvo vulneravel - Trabalho 1 (Seguranca de Sistemas Computacionais)
+# Cenario A: OWASP Juice Shop
+#
+# IMPORTANTE (conduta de laboratorio isolado):
+# a porta e ligada em 127.0.0.1, entao o alvo vulneravel fica acessivel
+# APENAS nesta maquina, nunca exposto na rede.
+#
+# Subir:   docker compose up -d
+# Acessar: http://127.0.0.1:3000 (ou na porta definida em .env, se customizada)
+# Derrubar: docker compose down
+#
+# Porta de host configuravel: copie .env.example para .env e ajuste
+# JUICESHOP_HTTP_PORT se a porta 3000 ja estiver em uso na sua maquina.
+# Nao e necessario editar este arquivo para isso.
+
+services:
+  juice-shop:
+    # Tag fixa (nao "latest") para que o ambiente seja reproduzivel entre
+    # execucoes em datas diferentes. Versao estavel mais recente no Docker
+    # Hub no momento da configuracao; digest registrado no README para
+    # conferencia (docker inspect --format='{{index .RepoDigests 0}}' juice-shop).
+    image: bkimminich/juice-shop:v20.2.0
+    container_name: juice-shop
+    restart: unless-stopped
+    ports:
+      - "127.0.0.1:${JUICESHOP_HTTP_PORT:-3000}:3000"
+    networks:
+      - labnet
+    healthcheck:
+      # A imagem e "distroless" (sem /bin/sh), por isso o teste chama o
+      # binario do Node diretamente em vez de um comando de shell.
+      test:
+        [
+          "CMD",
+          "/nodejs/bin/node",
+          "-e",
+          "require('http').get('http://127.0.0.1:3000/', r => process.exit(r.statusCode === 200 ? 0 : 1)).on('error', () => process.exit(1))",
+        ]
+      interval: 10s
+      timeout: 5s
+      retries: 6
+      start_period: 20s
+
+networks:
+  labnet:
+    driver: bridge
+
+# --------------------------------------------------------------------------
+# Cenario B (alternativa): OWASP WebGoat + WebWolf
+# Descomente este bloco e comente o juice-shop acima se optarem pelo WebGoat.
+# Acessar: http://127.0.0.1:8080/WebGoat
+#
+#  webgoat:
+#    image: webgoat/webgoat
+#    container_name: webgoat
+#    ports:
+#      - "127.0.0.1:8080:8080"
+#      - "127.0.0.1:9090:9090"
+#    environment:
+#      - WEBGOAT_HOST=0.0.0.0
+#      - WEBWOLF_HOST=0.0.0.0
+#    networks:
+#      - labnet
+# --------------------------------------------------------------------------
