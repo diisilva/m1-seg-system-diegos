@@ -94,7 +94,7 @@ a:hover{color:var(--apm-turquoise-2)}
 .apm-nav-arrow.next{right:14px}
 
 /* ---------- Slide shell ---------- */
-.apm-shell{min-height:calc(100vh - 52px);display:flex;flex-direction:column}
+.apm-shell{min-height:calc(100vh - 97px);display:flex;flex-direction:column}
 .apm-stage{flex:1;display:flex}
 .apm-slide{
   width:100%;max-width:1400px;margin:0 auto;padding:44px 72px 28px;animation:fade .25s ease;
@@ -213,7 +213,7 @@ code.apm-inline{
 
 /* ---------- Cover ---------- */
 .apm-cover{
-  min-height:calc(100vh - 120px);display:flex;flex-direction:column;justify-content:center;
+  min-height:calc(100vh - 168px);display:flex;flex-direction:column;justify-content:center;
   max-width:1100px;margin:0 auto;padding:0 24px;
 }
 .apm-cover .apm-eyebrow{font-size:13px}
@@ -257,8 +257,32 @@ code.apm-inline{
 .apm-cola-entry .notes{font-size:15px;color:var(--apm-fg-2);line-height:1.65}
 .apm-cola-back{display:inline-block;margin-bottom:18px;font-size:13px}
 
+/* ---------- Evidências selecionadas para projeção ---------- */
+.apm-proof{min-width:0;background:var(--apm-surface-2);border:1px solid var(--apm-border);border-radius:10px;padding:12px 14px;margin:10px 0}
+.apm-proof h4{margin:0 0 7px;color:var(--apm-turquoise);font-size:14px}
+.apm-proof pre{margin:0;white-space:pre-wrap;overflow-wrap:anywhere;font:13px/1.45 var(--apm-mono)}
+.apm-source{font-size:11px;color:var(--apm-muted);margin-top:7px;overflow-wrap:anywhere}
+.apm-source a{text-decoration:underline}
+.apm-evidence-slide h1.title{font-size:34px}
+.apm-evidence-slide h2.subtitle{margin-bottom:14px}
+.apm-evidence-slide .apm-card{padding:14px}
+.apm-evidence-slide .apm-callout{padding:10px 14px}
+.apm-evidence-slide .apm-figure{min-width:0}
+.apm-evidence-slide .apm-figure img{max-height:75px;object-fit:contain}
+.apm-evidence-slide .apm-figcap{font-size:11px}
+.apm-evidence-slide .apm-grid-2 > div{min-width:0}
+.apm-slide:has(.apm-evidence-slide){padding-top:26px;padding-bottom:18px}
+.apm-slide:has(.apm-grid-4 .apm-metric){padding-top:26px;padding-bottom:18px}
+.apm-slide:has(.apm-grid-4 .apm-metric) h2.subtitle{margin-bottom:16px}
+.apm-slide:has(.apm-grid-4 .apm-metric) .apm-table td{padding-top:6px;padding-bottom:6px}
+.apm-vector{font:11px/1.4 var(--apm-mono);color:var(--apm-muted);overflow-wrap:anywhere;margin:8px 0}
+@media(max-width:900px){.apm-evidence-slide h1.title{font-size:28px}.apm-proof pre{font-size:12px}}
 /* ---------- Responsive ---------- */
 @media (max-width:900px){
+  .apm-topbar{flex-wrap:wrap;gap:8px}
+  .apm-brand{flex:1;font-size:12px}
+  .apm-brand small{display:none}
+  .apm-kbds{display:none}
   .apm-slide{padding:32px 22px 24px}
   .apm-cover h1{font-size:38px}
   .apm-slide h1.title{font-size:32px}
@@ -317,6 +341,12 @@ function sev(kind, text){
   return `<span class="apm-sev ${cls}"><span class="apm-sev-dot"></span>${text}</span>`;
 }
 
+function escapeEvidence(text){
+  return String(text).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;");
+}
+function proof(title, excerpt, sources, note="Trechos selecionados; campos não exibidos omitidos."){
+  return '<section class="apm-proof"><h4>'+escapeEvidence(title)+'</h4><pre>'+escapeEvidence(excerpt)+'</pre><div class="apm-source">'+escapeEvidence(note)+'<br>'+sources.map(([label,path])=>'<a href="../evidencias/'+escapeEvidence(path)+'" target="_blank" rel="noopener">'+escapeEvidence(label)+'</a>').join(' · ')+'</div></section>';
+}
 /* ================= Slides ================= */
 const SLIDES = [
   { title:"Capa", group:"A", render:()=>`
@@ -357,7 +387,7 @@ const SLIDES = [
       </div>
       <div class="apm-card">
         <h4>Base legal</h4>
-        <p>Nenhum teste foi realizado contra sistema de terceiros. Testar sistema alheio sem autorização é crime pela Lei nº 12.737/2012; manter o alvo isolado no host mantém o trabalho dentro da conduta profissional esperada.</p>
+        <p>Nenhum teste foi realizado contra sistema de terceiros. O roteiro exige autorização e escopo local. A equipe executou os testes apenas no próprio laboratório, conforme a conduta profissional exigida.</p>
       </div>
     </div>
     <div class="apm-callout"><b>Segurança não é ataque gratuito.</b> O objetivo foi encontrar e comunicar falhas para que possam ser corrigidas, a postura de um profissional responsável.</div>` },
@@ -374,10 +404,10 @@ docker compose down       # derruba o ambiente</div>
         <p class="apm-p">A porta do contêiner é ligada exclusivamente em <code class="apm-inline">127.0.0.1</code>, de modo que a aplicação não fica acessível a partir de outro dispositivo da rede.</p>
       </div>
       <div class="apm-grid-2" style="grid-template-columns:1fr 1fr">
-        <div class="apm-card"><div class="apm-metric">v20.2.0</div><div class="apm-metric-label">Imagem com tag fixa, não <code class="apm-inline">latest</code>, garante ambiente idêntico em qualquer máquina.</div></div>
+        <div class="apm-card"><div class="apm-metric">v20.2.0</div><div class="apm-metric-label">Tag versionada reduz variações. O digest está registrado no README; o Compose usa a tag.</div></div>
         <div class="apm-card"><div class="apm-metric">healthy</div><div class="apm-metric-label"><code class="apm-inline">healthcheck</code> configurado; <code class="apm-inline">docker compose ps</code> confirma quando a app está pronta.</div></div>
         <div class="apm-card"><div class="apm-metric">.env</div><div class="apm-metric-label">Porta de host configurável, evita conflito sem editar o compose.</div></div>
-        <div class="apm-card"><div class="apm-metric">down/up</div><div class="apm-metric-label">Recriação do zero retorna ao mesmo estado íntegro em todas as execuções.</div></div>
+        <div class="apm-card"><div class="apm-metric">down/up</div><div class="apm-metric-label">Sem volume persistente: down remove o contêiner; up cria outro a partir da imagem.</div></div>
       </div>
     </div>` },
 
@@ -394,7 +424,7 @@ docker compose down       # derruba o ambiente</div>
           <tr><th>Item</th><th>Valor</th></tr>
           <tr><td>Alvo</td><td class="mono">http://127.0.0.1:3000</td></tr>
           <tr><td>Rede Docker</td><td class="mono">labnet (bridge, isolada)</td></tr>
-          <tr><td>Sub-rede</td><td class="mono">172.19.0.0/16</td></tr>
+          <tr><td>Sub-rede observada</td><td class="mono">172.19.0.0/16 (não fixada no Compose)</td></tr>
         </table>
       </div>
       <div>
@@ -410,7 +440,7 @@ docker compose down       # derruba o ambiente</div>
           <span class="apm-chip">curl</span>
           <span class="apm-chip">Scripts Python</span>
         </div>
-        <p class="apm-p">Cada achado seguiu o mesmo ciclo: reprodução manual, classificação em OWASP Top 10 e CWE, pontuação CVSS e análise de impacto na tríade CID e sob a LGPD. Os scripts Python reproduzem V1 a V7 de forma determinística, com gravação automática de requisição e resposta.</p>
+        <p class="apm-p">O método combina reprodução, evidência HTTP, classificação OWASP/CWE e pontuação CVSS. Python reproduz V1, V2, V3, V6 e V7; V4 e V5 usam curl/Postman. ZAP baseline é citado no relatório; seu log não foi preservado entre os artefatos disponíveis.</p>
       </div>
     </div>` },
 
@@ -429,12 +459,12 @@ docker compose down       # derruba o ambiente</div>
       <tr><td class="mono">V1</td><td>SQL Injection no login</td><td>A03</td><td class="mono">CWE-89</td><td>${sev('crit','9.1 Crítico')}</td></tr>
       <tr><td class="mono">V2</td><td>Hash MD5 da senha exposto no JWT</td><td>A02</td><td class="mono">CWE-522/916</td><td>${sev('med','6.5 Médio *')}</td></tr>
       <tr><td class="mono">V3</td><td>IDOR na cesta de compras</td><td>A01</td><td class="mono">CWE-639</td><td>${sev('med','6.5 Médio')}</td></tr>
-      <tr><td class="mono">V4</td><td>Erro verboso; CSP/HSTS ausentes</td><td>A05</td><td class="mono">CWE-209/16</td><td>${sev('med','5.3 Médio')}</td></tr>
+      <tr><td class="mono">V4</td><td>Erro verboso; CSP ausente</td><td>A05</td><td class="mono">CWE-209/16</td><td>${sev('med','5.3 Médio')}</td></tr>
       <tr><td class="mono">V5</td><td>Listagem de diretório em /ftp/</td><td>A05</td><td class="mono">CWE-548</td><td>${sev('high','7.5 Alto')}</td></tr>
       <tr><td class="mono">V6</td><td>Login sem bloqueio contra força bruta</td><td>A07</td><td class="mono">CWE-307</td><td>${sev('med','6.5 Médio')}</td></tr>
       <tr><td class="mono">V7</td><td>Reset de senha por pergunta de segurança</td><td>A04</td><td class="mono">CWE-640</td><td>${sev('crit','9.1 Crítico')}</td></tr>
     </table>
-    <p class="apm-p apm-muted" style="margin-top:10px;font-size:12.5px">* V2 pontua 6.5 avaliado isoladamente (PR:L) e 7.5 quando encadeado a partir de V1 (PR:N). Adotamos 6.5 como vetor de referência.</p>` },
+    <p class="apm-p apm-muted" style="margin-top:10px;font-size:12.5px">* Pontuações adotadas no relatório. V2: 6.5 no cenário autenticado; 7.5 é a leitura alternativa registrada com PR:N, não o score total da cadeia V1→V2. V6 e V7 têm limites de evidência explicados adiante.</p>` },
 
   { title:"V1, SQL Injection no login (A03)", group:"B", render:()=>`
     <div class="apm-eyebrow">Achado V1 · A03 Injection · ${''}CWE-89</div>
@@ -451,7 +481,7 @@ docker compose down       # derruba o ambiente</div>
   { title:"V2, hash MD5 exposto no JWT (A02)", group:"B", render:()=>`
     <div class="apm-eyebrow">Achado V2 · A02 Cryptographic Failures · CWE-522/916</div>
     <h1 class="title">Hash de senha exposto no token</h1>
-    <h2 class="subtitle">${sev('med','CVSS 6.5 Médio')} &nbsp;·&nbsp; 7.5 encadeado a partir de V1</h2>
+    <h2 class="subtitle">${sev('med','CVSS 6.5 Médio')} &nbsp;·&nbsp; 7.5 na leitura alternativa do relatório</h2>
     <div class="apm-grid-2">
       <div>
         <p class="apm-lead">O token retornado no login carrega, no payload decodificado, o campo <code class="apm-inline">password</code> com um MD5 sem sal da senha em texto claro.</p>
@@ -479,103 +509,124 @@ docker compose down       # derruba o ambiente</div>
       <div>${fig('fig5',5,'Console do navegador ao requisitar a cesta de outro usuário: resposta 200 com um UserId que não corresponde à conta autenticada.')}</div>
     </div>` },
 
-  { title:"V4, erro verboso e headers ausentes (A05)", group:"B", render:()=>`
-    <div class="apm-eyebrow">Achado V4 · A05 Security Misconfiguration · CWE-209/16</div>
-    <h1 class="title">Página de erro verbosa, sem CSP/HSTS</h1>
-    <h2 class="subtitle">${sev('med','CVSS 5.3 Médio')}</h2>
-    <p class="apm-lead">Um cabeçalho <code class="apm-inline">Authorization</code> mal formado provoca uma página de erro completa, revelando o framework e a versão. Nenhuma resposta traz <code class="apm-inline">Content-Security-Policy</code> ou <code class="apm-inline">Strict-Transport-Security</code>.</p>
-    <div class="apm-figrow" style="margin-top:16px">
-      ${fig('fig6',6,'Postman: requisição com Authorization mal formado e a resposta com OWASP Juice Shop (Express ^4.22.1) em destaque.')}
-      ${fig('fig7',7,'Cabeçalhos da página inicial, sem CSP nem HSTS.')}
-    </div>
-    <div class="apm-callout warn" style="margin-top:14px"><b>A06 investigada, sem achado.</b> A versão 4.22.1 do Express já corrige os CVEs recentes relevantes do framework, então a categoria foi investigada mas não gerou achado confirmado.</div>` },
 
-  { title:"V5, listagem de diretório /ftp (A05)", group:"B", render:()=>`
-    <div class="apm-eyebrow">Achado V5 · A05 Security Misconfiguration · CWE-548</div>
-    <h1 class="title">Listagem de diretório expõe documento confidencial</h1>
-    <h2 class="subtitle">${sev('high','CVSS 7.5 Alto')}</h2>
-    <p class="apm-lead">O caminho <code class="apm-inline">/ftp/</code> retorna a lista completa de arquivos sem autenticação. Um deles, <code class="apm-inline">acquisitions.md</code>, começa com "This document is confidential! Do not distribute!".</p>
-    <div class="apm-figrow" style="margin-top:16px">
-      ${fig('fig8',8,'Listagem de /ftp/ renderizada no Postman.')}
-      ${fig('fig9',9,'Conteúdo de acquisitions.md, obtido sem autenticação, com a frase de confidencialidade.')}
-    </div>
-    <p class="apm-p" style="margin-top:14px">A falha não está no aviso em si, e sim na ausência de controle de acesso que impeça a listagem e o download por um visitante não autenticado.</p>` },
-
-  { title:"V6, força bruta sem bloqueio (A07)", group:"B", render:()=>`
-    <div class="apm-eyebrow">Achado V6 · A07 Identification and Authentication Failures · CWE-307</div>
-    <h1 class="title">Login sem bloqueio contra força bruta</h1>
-    <h2 class="subtitle">${sev('med','CVSS 6.5 Médio')}</h2>
-    <div class="apm-grid-2">
-      <div>
-        <p class="apm-lead">O endpoint de login aceita tentativas ilimitadas com senha incorreta, sem atraso crescente, bloqueio temporário ou CAPTCHA.</p>
-        <p class="apm-p">Uma conta de teste recebeu quinze tentativas incorretas, todas com HTTP 401 e sem sinal de limitação. A décima sexta, com a senha correta, teve sucesso imediato, confirmando que nenhum mecanismo de defesa foi disparado.</p>
-        <p class="apm-p apm-muted">Por ser uma sequência repetitiva, a evidência é textual: os dezesseis pares de requisição e resposta em ordem, em <code class="apm-inline">evidencias/V6-bruteforce-login/http/</code>.</p>
-      </div>
-      <div class="apm-grid-2" style="grid-template-columns:1fr 1fr">
-        <div class="apm-card"><div class="apm-metric" style="color:var(--apm-red)">15</div><div class="apm-metric-label">tentativas incorretas, todas HTTP 401, sem bloqueio</div></div>
-        <div class="apm-card"><div class="apm-metric" style="color:var(--apm-green)">1</div><div class="apm-metric-label">tentativa correta, HTTP 200 imediato</div></div>
-      </div>
+  { title:"V4, exposição no erro e CSP ausente (A05)", group:"B", render:()=>`
+    <div class="apm-evidence-slide">
+    <div class="apm-eyebrow">Achado V4 · A05 Security Misconfiguration · CWE-209 / CWE-16*</div>
+    <h1 class="title">O erro expõe detalhes do servidor</h1>
+    <h2 class="subtitle">${sev('med','CVSS 5.3 Médio')} · pontuação do relatório para exposição de informação</h2>
+    <div class="apm-grid-2"><div>
+      ${proof("1. Entrada malformada → informação interna", "GET /rest/basket/1 HTTP/1.1\nAuthorization: BearerSemEspaco\n\nHTTP/1.1 401 Unauthorized\n<h1>OWASP Juice Shop (Express ^4.22.1)</h1>\nUnauthorizedError: Format is Authorization: Bearer [token]", [["Requisição V4","V4-erro-verboso-headers/http/01-request.http"],["HTML de erro","V4-erro-verboso-headers/http/01-response-body.html"]])}
+      <p class="apm-p"><b>O 401 está correto.</b> O problema é a página pública revelar tecnologia e detalhes do erro. Isso facilita reconhecimento; não comprova uma invasão pelo Express.</p>
+    </div><div>
+      ${proof("2. Resposta da página inicial", "HTTP/1.1 200 OK\nX-Content-Type-Options: nosniff\nX-Frame-Options: SAMEORIGIN\nFeature-Policy: payment 'self'\nContent-Type: text/html; charset=UTF-8", [["Headers completos (.txt)","V4-erro-verboso-headers/ferramentas/02-headers-pagina-inicial.txt"]], "Recorte do TXT. A ausência de CSP foi conferida na lista completa, não apenas neste recorte.")}
+      <p class="apm-p"><b>CSP ausente:</b> falta uma camada de contenção de scripts. <b>HSTS:</b> não é evidência de falha neste alvo HTTP por IP; é recomendação para implantação HTTPS com domínio. <a href="https://developer.mozilla.org/en-US/docs/Web/HTTP/Reference/Headers/Strict-Transport-Security" target="_blank" rel="noopener">[MDN]</a></p>
+    </div></div>
+    <div class="apm-callout"><b>Por que V4 permanece? A05 está evidenciada.</b> A06 pergunta outra coisa: existe uma vulnerabilidade conhecida aplicável ao componente? Essa investigação não confirmou A06 e não entra na contagem.</div>
+    <div class="apm-figrow">${fig('fig6',6,'Erro verboso capturado no Postman. Clique para ampliar.')}${fig('fig7',7,'Cabeçalhos completos da página inicial. Clique para ampliar.')}</div>
+    <p class="apm-vector">CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:L/I:N/A:N · *CWE-16 é categoria ampla herdada do relatório; CWE-209 descreve o erro.</p>
     </div>` },
 
-  { title:"V7, reset de senha por pergunta (A04)", group:"B", render:()=>`
+  { title:"V5, listagem e documento público (A05)", group:"B", render:()=>`
+    <div class="apm-evidence-slide">
+    <div class="apm-eyebrow">Achado V5 · A05 Security Misconfiguration · CWE-548</div>
+    <h1 class="title">Índice público leva a documento confidencial</h1>
+    <h2 class="subtitle">${sev('high','CVSS 7.5 Alto')} · confidencialidade no cenário avaliado</h2>
+    <div class="apm-grid-2"><div>
+      ${proof("1. O índice revela o nome do recurso", "GET /ftp/ HTTP/1.1\nHost: 127.0.0.1:3000\n\nHTTP/1.1 200 OK\n<a href=\"acquisitions.md\" ...>...</a>\n<a href=\"package.json.bak\" ...>...</a>", [["Pedido sem Authorization","V5-listagem-diretorio-ftp/http/01-request.http"],["Listagem HTML","V5-listagem-diretorio-ftp/http/01-listing.html"]], "Recorte da requisição, status e HTML; reticências abreviam atributos/conteúdo.")}
+      <p class="apm-p">A listagem preservada contém 10 arquivos e uma subpasta. Listado não significa necessariamente baixável.</p>
+    </div><div>
+      ${proof("2. Conteúdo efetivamente obtido", "# Planned Acquisitions\n\n> This document is confidential! Do not distribute!\n\nOur company plans to acquire several competitors within the next year.", [["Documento obtido","V5-listagem-diretorio-ftp/http/02-acquisitions.md"]], "Trecho inicial literal de acquisitions.md; o HTTP 200 do download aparece no print abaixo.")}
+      <p class="apm-p">O dano demonstrado é exposição de informação empresarial. Dados pessoais não foram identificados neste trecho.</p>
+    </div></div>
+    <div class="apm-callout"><b>Correção:</b> retirar arquivos sensíveis da área pública e autorizar downloads. Desativar somente o índice deixa possível o acesso pela URL conhecida.</div>
+    <div class="apm-figrow">${fig('fig8',8,'Índice de /ftp/ no Postman.')}${fig('fig9',9,'Download do documento confidencial no Postman.')}</div>
+    <p class="apm-vector">CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:H/I:N/A:N</p>
+    </div>` },
+
+  { title:"V6, login após 15 erros consecutivos (A07)", group:"B", render:()=>`
+    <div class="apm-evidence-slide">
+    <div class="apm-eyebrow">Achado V6 · A07 Identification and Authentication Failures · CWE-307</div>
+    <h1 class="title">Quinze erros não impediram o próximo login</h1>
+    <h2 class="subtitle">${sev('med','CVSS 6.5 Médio')} · pontuação adotada no relatório</h2>
+    <p class="apm-p"><b>Força bruta:</b> repetir candidatos à senha de uma conta. O ensaio verificou se erros sucessivos acionariam uma restrição; a senha final já era conhecida pela equipe.</p>
+    <div class="apm-grid-2"><div>
+      ${proof("1. Mesma conta, senhas incorretas", "POST http://127.0.0.1:3000/rest/user/login\n{\"email\":\"bruteforce-837d92427c@lab.local\",\n \"password\":\"senhaErrada1\"}\n\nHTTP 401 Unauthorized\nInvalid email or password.", [["Pedido · 02","V6-bruteforce-login/http/02-request.http"],["Primeiro erro · 02","V6-bruteforce-login/http/02-response.http"],["Último erro · 16","V6-bruteforce-login/http/16-response.http"]], "JSON reformatado. Arquivos 02–16: 15 senhas diferentes, todas HTTP 401.")}
+      <p class="apm-p"><b>401:</b> aquela senha foi rejeitada. Isso, sozinho, não informa se há limite para repetir o teste.</p>
+    </div><div>
+      ${proof("2. Senha correta logo após os erros", "POST http://127.0.0.1:3000/rest/user/login\n{\"email\":\"bruteforce-837d92427c@lab.local\",\n \"password\":\"SenhaCorreta#9\"}\n\nHTTP 200 OK\nDate: Sat, 05 Sep 2026 19:52:05 GMT", [["Pedido · 17","V6-bruteforce-login/http/17-request.http"],["Login correto · 17","V6-bruteforce-login/http/17-response.http"]], "JSON reformatado. O corpo original contém authentication.token; token omitido da projeção.")}
+      <p class="apm-p"><b>200:</b> a conta ainda aceitava autenticação válida depois dos 15 erros. Nenhum 403/429 foi observado.</p>
+    </div></div>
+    <div class="apm-callout"><b>Conclusão limitada ao ensaio:</b> não houve bloqueio impeditivo após 15 falhas. Isso não prova tentativas infinitas, ausência de logs ou ausência de qualquer atraso. Os headers Date têm resolução de segundos.</div>
+    <p class="apm-p">17 pares = cadastro (01) + 15 erros (02–16) + acerto (17). Defesa: limite por conta, espera progressiva e MFA. <a href="https://cheatsheetseries.owasp.org/cheatsheets/Authentication_Cheat_Sheet.html#login-throttling" target="_blank" rel="noopener">[OWASP]</a></p>
+    <p class="apm-vector">CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:L/I:L/A:N · impacto potencial; nenhuma senha desconhecida foi descoberta neste ensaio.</p>
+    </div>` },
+
+  { title:"V7, recuperação por resposta fraca (A04)", group:"B", render:()=>`
+    <div class="apm-evidence-slide">
     <div class="apm-eyebrow">Achado V7 · A04 Insecure Design · CWE-640</div>
-    <h1 class="title">Redefinição de senha sem limite de tentativas</h1>
-    <h2 class="subtitle">${sev('crit','CVSS 9.1 Crítico')}</h2>
-    <p class="apm-lead">Duas falhas de concepção se combinam: a pergunta de segurança de um e-mail pode ser consultada sem autenticação, e o endpoint que valida a resposta não impõe limite de tentativas.</p>
-    <div class="apm-grid-2" style="margin-top:14px">
-      <div class="apm-card">
-        <h4>Exploração demonstrada</h4>
-        <p>Conta de teste com a pergunta "Your eldest siblings middle name?". Testando cinco nomes prováveis, a quinta tentativa acertou, a senha foi redefinida e o login teve sucesso. Nenhuma das quatro tentativas erradas gerou bloqueio.</p>
-      </div>
-      <div class="apm-card">
-        <h4>Hipótese testada e descartada</h4>
-        <p>Tentar associar uma resposta ao <code class="apm-inline">UserId</code> de uma conta que já tinha resposta configurada, para sequestro direto. A API rejeitou com HTTP 400 (unicidade de <code class="apm-inline">UserId</code>), o que limita o achado ao cenário de adivinhação.</p>
-      </div>
-    </div>
-    <div class="apm-callout" style="margin-top:14px">A reprodução exigiu engenharia reversa de um passo da API não documentado, a associação da resposta de segurança à conta em duas chamadas, que a interface web executa automaticamente.</div>` },
+    <h1 class="title">Resposta fraca permite redefinir a senha</h1>
+    <h2 class="subtitle">${sev('crit','CVSS 9.1 Crítico')} · cenário de resposta previsível adotado no relatório</h2>
+    <p class="apm-p">Conta de teste com resposta “John”: pergunta consultável sem login → quatro erros → resposta correta → nova senha aceita.</p>
+    <div class="apm-grid-2"><div>
+      ${proof("1. Consulta e primeiro erro", "GET /rest/user/security-question?email=...\nHTTP 200 OK\n\"question\":\"Your eldest siblings middle name?\"\n\nPOST /rest/user/reset-password\n\"answer\": \"Michael\"\nHTTP 401 Unauthorized\nX-RateLimit-Limit: 100\nX-RateLimit-Remaining: 99\nWrong answer to security question.", [["Pergunta · 04","V7-reset-senha-pergunta-seguranca/http/04-response.http"],["Erro · 05","V7-reset-senha-pergunta-seguranca/http/05-response.http"]], "Recortes de duas trocas HTTP; URL abreviada e campos JSON selecionados.")}
+    </div><div>
+      ${proof("2. Quinta resposta e login final", "POST /rest/user/reset-password\n\"answer\": \"John\"\n\"new\": \"SenhaForjada#2\"\nHTTP 200 OK\nX-RateLimit-Limit: 100\nX-RateLimit-Remaining: 95\n\nPOST /rest/user/login\n\"password\": \"SenhaForjada#2\"\nHTTP 200 OK", [["Reset · 09","V7-reset-senha-pergunta-seguranca/http/09-response.http"],["Novo login · 10","V7-reset-senha-pergunta-seguranca/http/10-response.http"]], "Recortes de duas trocas HTTP; os pedidos de reset também enviam email e repeat.")}
+    </div></div>
+    <div class="apm-callout warn"><b>Existe limite anunciado.</b> Os headers contradizem “tentativas ilimitadas”. A resposta fraca foi acertada antes de esgotá-lo; não foi testado o bloqueio na centésima tentativa.</div>
+    <p class="apm-p">A04: o fluxo confia numa resposta adivinhável para trocar a credencial. Correção: token imprevisível, de uso único e com expiração, além de controles de tentativa. <a href="https://cheatsheetseries.owasp.org/cheatsheets/Forgot_Password_Cheat_Sheet.html" target="_blank" rel="noopener">[OWASP]</a></p>
+    <p class="apm-vector">CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:H/I:H/A:N · 9.1 é o valor do relatório; pré-condição: resposta previsível. Não extrapolar para qualquer conta.</p>
+    </div>` },
 
   { title:"Cobertura OWASP", group:"C", render:()=>`
-    <div class="apm-eyebrow">Escopo coberto</div>
-    <h1 class="title">Cobertura das categorias OWASP</h1>
-    <h2 class="subtitle">Mínimo de seis categorias distintas atingido, com A01, A02 e A03 obrigatórias confirmadas.</h2>
-    <div class="apm-grid-4">
-      <div class="apm-card"><span class="apm-chip turquoise">A01</span><p style="margin-top:8px">Broken Access Control, V3</p></div>
-      <div class="apm-card"><span class="apm-chip turquoise">A02</span><p style="margin-top:8px">Cryptographic Failures, V2</p></div>
-      <div class="apm-card"><span class="apm-chip turquoise">A03</span><p style="margin-top:8px">Injection, V1</p></div>
-      <div class="apm-card"><span class="apm-chip turquoise">A04</span><p style="margin-top:8px">Insecure Design, V7</p></div>
-      <div class="apm-card"><span class="apm-chip turquoise">A05</span><p style="margin-top:8px">Security Misconfiguration, V4 e V5</p></div>
-      <div class="apm-card"><span class="apm-chip turquoise">A07</span><p style="margin-top:8px">Auth Failures, V6</p></div>
-      <div class="apm-card"><span class="apm-chip orange">A06</span><p style="margin-top:8px">Investigada, sem achado (Express já corrigido)</p></div>
-      <div class="apm-card"><span class="apm-chip">A08 / A09 / A10</span><p style="margin-top:8px">Sem investigação, trabalho futuro</p></div>
-    </div>
-    <div class="apm-callout" style="margin-top:16px">A06 conta como investigada sem confirmação, não como "não aplicável". A08, A09 e A10 permanecem em aberto, e não são requisito pendente para a entrega mínima.</div>` },
+    <div class="apm-evidence-slide">
+    <div class="apm-eyebrow">Escopo coberto</div><h1 class="title">Sete achados, seis categorias</h1>
+    <h2 class="subtitle">Mapeamento adotado: A01, A02 e A03 obrigatórias, mais A04, A05 e A07.</h2>
+    <div class="apm-grid-2"><div>
+      <table class="apm-table"><tr><th>Categoria</th><th>Prova principal</th></tr>
+      <tr><td>A01 · V3</td><td>Token B lê cesta A</td></tr><tr><td>A02 · V2</td><td>MD5 da senha no JWT</td></tr>
+      <tr><td>A03 · V1</td><td>SQLi concede sessão administrativa</td></tr><tr><td>A04 · V7</td><td>Resposta fraca → troca de senha</td></tr>
+      <tr><td>A05 · V4 e V5</td><td>Erro verboso e arquivo público</td></tr><tr><td>A07 · V6</td><td>Login válido após 15 falhas</td></tr></table>
+    </div><div>
+      ${proof("Confirmação automatizada de A03", "Parameter: JSON email ((custom) POST)\n    Type: boolean-based blind\nback-end DBMS: SQLite", [["Log do sqlmap (.txt)","V1-sqli-login/ferramentas/01-sqlmap-login-email.txt"]], "Linhas selecionadas do log; não é uma varredura das seis categorias.")}
+      ${proof("Verificação independente de A02", "Hash presente no campo 'password' do payload: 8b8c7a4e51e96bd9c5355af999eabf07\nMD5 calculado localmente sobre a senha em texto claro: 8b8c7a4e51e96bd9c5355af999eabf07\nHashes idênticos: True", [["Análise do JWT (.txt)","V2-hash-senha-jwt/analise-jwt.txt"]])}
+    </div></div>
+    <div class="apm-callout"><b>A06:</b> investigação registrada sobre Express, sem achado confirmado; não comprova segurança de todas as dependências. <b>A08–A10:</b> não investigadas. O mínimo numérico está coberto; permanece a limitação de análise das demais categorias.</div>
+    </div>` },
 
   { title:"Priorização e correções", group:"C", render:()=>`
-    <div class="apm-eyebrow">Recomendações</div>
-    <h1 class="title">Priorização por severidade</h1>
-    <h2 class="subtitle">A ordem de correção segue o CVSS de cada achado.</h2>
-    <table class="apm-table">
-      <tr><th>Prioridade</th><th>Achado</th><th>Correção</th></tr>
-      <tr><td>${sev('crit','Crítico')}</td><td>V1 SQLi no login</td><td>Consultas parametrizadas, sem concatenar entrada na query.</td></tr>
-      <tr><td>${sev('crit','Crítico')}</td><td>V7 Reset por pergunta</td><td>Limite de tentativas e bloqueio após poucos erros no fluxo de recuperação.</td></tr>
-      <tr><td>${sev('high','Alto')}</td><td>V5 Listagem /ftp</td><td>Desativar a listagem no servidor de arquivos estáticos, correção de baixo custo.</td></tr>
-      <tr><td>${sev('med','Médio')}</td><td>V2 Hash no token</td><td>Remover dado de autenticação do payload do token.</td></tr>
-      <tr><td>${sev('med','Médio')}</td><td>V3 IDOR na cesta</td><td>Validar a posse do recurso no backend antes de retornar dados.</td></tr>
-      <tr><td>${sev('med','Médio')}</td><td>V6 Força bruta</td><td>Limite de tentativas com bloqueio temporário no login.</td></tr>
-      <tr><td>${sev('med','Médio')}</td><td>V4 Erro/headers</td><td>Mensagem de erro genérica e cabeçalhos CSP e HSTS.</td></tr>
-    </table>` },
+    <div class="apm-evidence-slide">
+    <div class="apm-eyebrow">Recomendações</div><h1 class="title">Corrigir a causa e verificar o resultado</h1>
+    <h2 class="subtitle">Ordem do relatório; as premissas do CVSS e o contexto do ativo precisam ser considerados.</h2>
+    <table class="apm-table"><tr><th>Prioridade</th><th>Controle recomendado</th><th>O que retestar</th></tr>
+      <tr><td>V1 · 9.1</td><td>Consulta parametrizada</td><td>Payload não concede sessão</td></tr>
+      <tr><td>V7 · 9.1*</td><td>Token imprevisível, único e expirável</td><td>Pergunta fraca não redefine a senha</td></tr>
+      <tr><td>V5 · 7.5</td><td>Remover arquivo público / autorizar acesso</td><td>URL direta também é protegida</td></tr>
+      <tr><td>V2 · 6.5*</td><td>Retirar hash do JWT; hash de senha adequado</td><td>Token sem password</td></tr>
+      <tr><td>V3 · 6.5</td><td>Autorização por objeto no servidor</td><td>Conta B não recebe cesta A</td></tr>
+      <tr><td>V6 · 6.5*</td><td>Limites por conta, espera progressiva, MFA</td><td>Política de tentativas funciona</td></tr>
+      <tr><td>V4 · 5.3</td><td>Erro genérico e política CSP</td><td>Erro sem detalhe interno; CSP coerente</td></tr>
+    </table>
+    ${proof("O controle atual de V7 não evitou o cenário testado", "HTTP 200 OK\nX-RateLimit-Limit: 100\nX-RateLimit-Remaining: 95", [["Reset · 09","V7-reset-senha-pergunta-seguranca/http/09-response.http"]], "Resultado do reset com John. Limitar volume não torna uma resposta previsível um fator forte.")}
+    <p class="apm-source">* Scores preservados do relatório, com ressalvas de cenário discutidas nos achados. Recomendações não foram implementadas/retestadas. HSTS: considerar em HTTPS com domínio.</p>
+    </div>` },
 
   { title:"Conclusão", group:"C", render:()=>`
-    <div class="apm-eyebrow">Síntese</div>
-    <h1 class="title">Conclusão</h1>
-    <h2 class="subtitle">Três frentes concentram os achados de maior severidade.</h2>
+    <div class="apm-evidence-slide">
+    <div class="apm-eyebrow">Síntese</div><h1 class="title">A evidência define o alcance da conclusão</h1>
+    <h2 class="subtitle">Falhas de consulta, acesso a dados e recuperação de conta no laboratório local.</h2>
     <div class="apm-grid-3">
-      <div class="apm-card"><h4>Validação de entrada</h4><p>V1, a injeção SQL no login, compromete qualquer conta sem depender de outra falha.</p></div>
-      <div class="apm-card"><h4>Controle de acesso a objeto</h4><p>V3, o IDOR na cesta, mostra ausência de verificação de posse do recurso no backend.</p></div>
-      <div class="apm-card"><h4>Autenticação e recuperação</h4><p>V2, V6 e V7 atingem token, login e fluxo de recuperação de conta.</p></div>
+      <div class="apm-card"><h4>V1 · entrada na consulta</h4><p>O payload testado concedeu sessão administrativa, sem senha correta.</p></div>
+      <div class="apm-card"><h4>V3 · autorização por objeto</h4><p>Conta comum leu a cesta de outra, apesar de autenticada com seu próprio token.</p></div>
+      <div class="apm-card"><h4>V7 · recuperação fraca</h4><p>Resposta previsível permitiu redefinir a senha mesmo com limite anunciado.</p></div>
     </div>
-    <p class="apm-p" style="margin-top:18px">O valor do exercício esteve no rigor da reprodução: evidência em texto além da captura de tela, CWE validado diretamente na base do MITRE em vez de assumido pela categoria OWASP, e vetor CVSS justificado métrica a métrica. V4 e V5 exigiram investigação própria; V7 exigiu engenharia reversa de um passo não documentado da API.</p>
-    <div class="apm-callout"><b>Se levado a produção</b>, essas três frentes devem orientar a priorização de correções. As categorias A08, A09 e A10 seguem como próximo passo de investigação.</div>` },
+    <div class="apm-grid-2">
+      ${proof("V6: senha errada rejeitada", "HTTP 401 Unauthorized\nInvalid email or password.", [["Primeiro erro · 02","V6-bruteforce-login/http/02-response.http"]], "Erro de credencial; sozinho não prova um bloqueio de tentativas.")}
+      ${proof("V7: resposta errada rejeitada", "HTTP 401 Unauthorized\nX-RateLimit-Limit: 100\nX-RateLimit-Remaining: 99\nWrong answer to security question.", [["Erro · 05","V7-reset-senha-pergunta-seguranca/http/05-response.http"]], "Mesmo status 401, mas com contador anunciado. Os controles devem ser analisados por fluxo.")}
+    </div>
+    <div class="apm-callout"><b>Lição:</b> guardar pedido, resposta e efeito permite revisar interpretações. V4 confirma A05; A06 não foi confirmada. V6 sustenta o ensaio de 15 erros; V7 sustenta o cenário de resposta fraca.</div>
+    <p class="apm-p">Próximos passos: aprofundar dependências e A08–A10, revisar as premissas dos scores e retestar as correções propostas. Obrigado!</p>
+    </div>` },
 ];
 
 /* ================= Estado e roteamento ================= */
